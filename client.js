@@ -33,6 +33,14 @@ fsPromises.readFile(__dirname + "/client.html")
 const wss = new WebSocket.Server({ port: WS_PORT });
 console.log(`WebSocket Server: ws://${HTTP_HOST}:${WS_PORT}`);
 
+function broadcast(data) {
+  wss.clients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify(data));
+    }
+  });
+}
+
 // ID klien diambil dari argumen command line
 const CLIENT_ID = process.argv[2] ? process.argv[2] : Math.floor(Math.random() * 100);
 
